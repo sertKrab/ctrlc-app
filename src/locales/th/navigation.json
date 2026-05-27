@@ -1,0 +1,18 @@
+{
+  "menu": {
+    "title": "__APP_TITLE__",
+    "dashboard": "แดชบอร์ด",
+    "customers": "ลูกค้า",
+    "report": "รายงาน",
+    "settings": "ตั้งค่า"
+  },
+  "topbar": {
+    "profile": "โปรไฟล์",
+    "logout": "ออกจากระบบ",
+    "language": "ภาษา"
+  },
+  "system": {
+    "loading": "กำลังโหลด...",
+    "error": "เกิดข้อผิดพลาด"
+  }
+}

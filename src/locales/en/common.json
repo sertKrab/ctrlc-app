@@ -1,0 +1,52 @@
+{
+  "button": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "back": "Back",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+  "label": {
+    "status": "Status",
+    "action": "Action",
+    "createdAt": "Created At",
+    "updatedAt": "Last Updated",
+    "total": "Total"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "error": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email format",
+    "serverError": "Server error. Please try again.",
+    "networkError": "Network connection failed",
+    "unauthorized": "Unauthorized. Please log in.",
+    "forbidden": "You do not have permission to perform this action"
+  },
+  "pagination": {
+    "rowsPerPage": "Rows per page",
+    "of": "of",
+    "items": "items"
+  },
+  "empty": {
+    "noData": "No data available",
+    "noResults": "No results found"
+  },
+  "confirm": {
+    "deleteTitle": "Confirm Delete",
+    "deleteMessage": "Are you sure you want to delete this item? This action cannot be undone.",
+    "logoutTitle": "Confirm Logout",
+    "logoutMessage": "Are you sure you want to log out?"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "__PROJECT_LOWER__",
+  "version": "0.1.0",
+  "private": true,
+  "description": "__PROJECT_NAME__ — React + TypeScript + Vite",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.0",
+    "@reduxjs/toolkit": "^2.12.0",
+    "axios": "^1.16.1",
+    "i18next": "^26.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^17.0.8",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^6.24.0",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/ui": "^4.1.7",
+    "jsdom": "^29.1.1",
+    "msw": "^2.14.6",
+    "typescript": "^5.5.0",
+    "vite": "^5.3.0",
+    "vitest": "^4.1.7"
+  }
+}

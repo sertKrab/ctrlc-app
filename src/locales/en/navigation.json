@@ -1,0 +1,18 @@
+{
+  "menu": {
+    "title": "__APP_TITLE__",
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "report": "Report",
+    "settings": "Settings"
+  },
+  "topbar": {
+    "profile": "Profile",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "system": {
+    "loading": "Loading...",
+    "error": "An error occurred"
+  }
+}
