@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useLocation } from 'react-router-dom';
@@ -14,11 +15,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { THEME_COLORS } from '@/theme';
 
 const BREADCRUMB_MAP: Record<string, string[]> = {
-  [ROUTES.DASHBOARD]: ['แดชบอร์ด'],
-  [ROUTES.CUSTOMERS]: ['ลูกค้า', 'รายชื่อทั้งหมด'],
-  [ROUTES.SETTINGS]: ['ระบบ', 'ตั้งค่า'],
-  [ROUTES.REPORT]: ['รายงาน', 'รายงานการดำเนินการ'],
+  [ROUTES.DASHBOARD]: ['menu.dashboard'],
+  [ROUTES.CUSTOMERS]: ['menu.customers'],
+  [ROUTES.SETTINGS]: ['menu.settings'],
+  [ROUTES.REPORT]: ['menu.report'],
 };
+
+interface AppTopBarProps {
+  onMenuClick?: () => void;
+}
 
 function getInitials(name: string): string {
   return name
@@ -29,7 +34,7 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-export default function AppTopBar() {
+export default function AppTopBar({ onMenuClick }: AppTopBarProps) {
   const { pathname } = useLocation();
   const { t } = useTranslation('navigation');
   const { user } = useAuth();
@@ -37,7 +42,7 @@ export default function AppTopBar() {
   const crumbKey = Object.keys(BREADCRUMB_MAP).find(
     (k) => pathname === k || pathname.startsWith(k + '/'),
   );
-  const crumbs = crumbKey ? BREADCRUMB_MAP[crumbKey] : [t('system.loading')];
+  const crumbs = crumbKey ? BREADCRUMB_MAP[crumbKey] : ['system.loading'];
 
   return (
     <AppBar
@@ -51,29 +56,38 @@ export default function AppTopBar() {
       }}
     >
       <Toolbar sx={{ minHeight: '64px !important', gap: 2 }}>
-        {/* Breadcrumb */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flex: 1 }}>
+        <IconButton
+          edge="start"
+          size="small"
+          aria-label="Open navigation"
+          onClick={onMenuClick}
+          sx={{ color: '#1A1A2E', display: { xs: 'inline-flex', md: 'none' } }}
+        >
+          <MenuOutlinedIcon fontSize="small" />
+        </IconButton>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flex: 1, minWidth: 0 }}>
           {crumbs.map((crumb, i) => (
-            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Box key={crumb} sx={{ display: 'flex', alignItems: 'center', gap: 0.75, minWidth: 0 }}>
               {i > 0 && (
                 <Typography sx={{ color: '#9CA3AF', fontSize: '0.875rem' }}>/</Typography>
               )}
               <Typography
+                noWrap
                 sx={{
                   fontSize: '0.875rem',
                   fontWeight: i === crumbs.length - 1 ? 600 : 400,
                   color: i === crumbs.length - 1 ? '#1A1A2E' : '#6B7280',
                 }}
               >
-                {crumb}
+                {t(crumb)}
               </Typography>
             </Box>
           ))}
         </Box>
 
-        {/* Right actions */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <IconButton size="small" sx={{ color: '#6B7280' }}>
+          <IconButton size="small" sx={{ color: '#6B7280', display: { xs: 'none', sm: 'inline-flex' } }}>
             <SearchOutlinedIcon fontSize="small" />
           </IconButton>
 
@@ -84,7 +98,7 @@ export default function AppTopBar() {
           </IconButton>
 
           {user && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: { xs: 0.5, sm: 1 } }}>
               <Avatar
                 sx={{
                   width: 32, height: 32,
