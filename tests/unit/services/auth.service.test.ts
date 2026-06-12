@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
+import { createApiFailure, createApiSuccess, mockLoginResponse } from '../../test-utils/fixtures';
 
 vi.mock('../../../src/services/http', () => ({
   default: {
@@ -20,34 +21,13 @@ import { authService } from '../../../src/services/auth.service';
 
 const mockPost = http.post as Mock;
 
-const MOCK_USER = {
-  id: '1',
-  username: 'admin',
-  email: 'admin@ctrlc.co.th',
-  displayName: 'Admin User',
-  role: 'admin' as const,
-};
-
-const MOCK_TOKENS = {
-  accessToken: 'access-token-abc',
-  refreshToken: 'refresh-token-xyz',
-  expiresIn: 3600,
-};
-
-const SUCCESS_RESPONSE = {
-  data: {
-    success: true,
-    data: { user: MOCK_USER, tokens: MOCK_TOKENS },
-  },
-};
-
 describe('AuthService.login', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('returns LoginResponse on valid credentials', async () => {
-    mockPost.mockResolvedValueOnce(SUCCESS_RESPONSE);
+    mockPost.mockResolvedValueOnce(createApiSuccess(mockLoginResponse));
 
     const result = await authService.login({ username: 'admin@ctrlc.co.th', password: 'secret' });
 
@@ -57,9 +37,7 @@ describe('AuthService.login', () => {
   });
 
   it('returns ApiResponse with success=false for invalid credentials', async () => {
-    mockPost.mockResolvedValueOnce({
-      data: { success: false, error: 'AUTH-001', data: null },
-    });
+    mockPost.mockResolvedValueOnce(createApiFailure('AUTH-001'));
 
     const result = await authService.login({ username: 'error@test.com', password: 'wrong' });
 
@@ -76,7 +54,7 @@ describe('AuthService.login', () => {
   });
 
   it('calls the login endpoint with provided credentials', async () => {
-    mockPost.mockResolvedValueOnce(SUCCESS_RESPONSE);
+    mockPost.mockResolvedValueOnce(createApiSuccess(mockLoginResponse));
 
     await authService.login({ username: 'admin@ctrlc.co.th', password: 'mypass' });
 

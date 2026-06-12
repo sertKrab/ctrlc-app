@@ -13,6 +13,10 @@ npm run test:ui   # Vitest browser UI at http://localhost:51204
 ```
 tests/
 ├── setup.ts                        # global setup: jest-dom, i18n mock, localStorage reset
+├── test-utils/
+│   ├── fixtures.ts                 # shared mock users, tokens, API response builders
+│   ├── render.tsx                  # renderWithProviders + RTL re-exports
+│   └── store.ts                    # createTestStore for Redux-backed tests
 ├── unit/
 │   ├── utils/
 │   │   ├── format.test.ts          # formatDate, formatCurrency, formatPhone
@@ -42,28 +46,45 @@ describe('myUtil', () => {
 
 ## Adding an Integration Test
 
-Create a `.tsx` file in `tests/integration/`. Wrap the component with all required providers:
+Create a `.tsx` file in `tests/integration/`. Use the project test renderer so each test gets the same Redux, router, theme, auth, and user-event setup:
 
 ```tsx
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import { configureStore } from '@reduxjs/toolkit';
-import { authReducer } from '../../src/store/auth.slice';
-import theme from '../../src/theme';
+import { screen, renderWithProviders } from '../test-utils/render';
+import MyPage from '../../src/pages/MyPage';
 
-function renderWithProviders(ui: React.ReactElement) {
-  const store = configureStore({ reducer: { auth: authReducer } });
-  return render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <MemoryRouter>{ui}</MemoryRouter>
-      </ThemeProvider>
-    </Provider>,
-  );
-}
+it('renders the page title', () => {
+  renderWithProviders(<MyPage />, { route: '/my-page' });
+  expect(screen.getByRole('heading', { name: /my title/i })).toBeInTheDocument();
+});
 ```
+
+`renderWithProviders` returns the Testing Library render result plus:
+
+```ts
+const { store, user } = renderWithProviders(<MyPage />);
+
+await user.click(screen.getByRole('button', { name: /save/i }));
+expect(store.getState().auth.isAuthenticated).toBe(false);
+```
+
+Options:
+
+```ts
+renderWithProviders(<MyPage />, {
+  route: '/settings',
+  preloadedState: {
+    auth: {
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
+    },
+  },
+  withAuthProvider: true,
+});
+```
+
+Use `withAuthProvider: false` only for tests that need to assert behavior outside `AuthProvider`.
 
 ## Mock Patterns
 
@@ -83,6 +104,14 @@ import http from '../../src/services/http';
 const mockPost = http.post as Mock;
 
 mockPost.mockResolvedValueOnce({ data: { success: true, data: { ... } } });
+```
+
+Prefer shared fixtures for common auth/API data:
+
+```ts
+import { createApiSuccess, mockLoginResponse } from '../test-utils/fixtures';
+
+mockPost.mockResolvedValueOnce(createApiSuccess(mockLoginResponse));
 ```
 
 ### Mock i18n (auto-applied via setup.ts)
