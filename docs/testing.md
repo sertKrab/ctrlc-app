@@ -6,6 +6,8 @@
 npm test          # run all tests once (CI mode)
 npm run test:watch  # watch mode (re-run on file change)
 npm run test:ui   # Vitest browser UI at http://localhost:51204
+npm run test:e2e  # run Playwright E2E tests
+npm run test:e2e:ui  # open Playwright UI mode
 ```
 
 ## Test Structure
@@ -25,9 +27,15 @@ tests/
 │   │   └── useTable.test.ts        # useTable state + handlers
 │   └── services/
 │       └── auth.service.test.ts    # AuthService.login / logout (axios mocked)
-└── integration/
-    └── auth.test.tsx               # LoginPage render + submit flows (all providers)
+├── integration/
+│   └── auth.test.tsx               # LoginPage render + submit flows (all providers)
+└── e2e/
+    ├── auth.spec.ts                # Playwright browser-level auth smoke flows
+    └── fixtures/
+        └── auth.fixture.ts         # authenticatedPage fixture + E2E test user
 ```
+
+Vitest excludes `tests/e2e/**`; Playwright owns that directory.
 
 ## Adding a Unit Test
 

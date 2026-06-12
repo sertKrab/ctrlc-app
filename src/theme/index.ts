@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 
-const PRIMARY_COLOR = '__PRIMARY_COLOR__';
-const SECONDARY_COLOR = '__SECONDARY_COLOR__';
-const FONT_FAMILY = "'__FONT_FAMILY__', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+const PRIMARY_COLOR = '#0D7FFF';
+const SECONDARY_COLOR = '#2B3D5E';
+const FONT_FAMILY = "'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
 const theme = createTheme({
   palette: {
@@ -249,8 +249,8 @@ const theme = createTheme({
 export default theme;
 
 export const THEME_COLORS = {
-  primary: '__PRIMARY_COLOR__',
-  secondary: '__SECONDARY_COLOR__',
+  primary: '#0D7FFF',
+  secondary: '#2B3D5E',
   primaryLight: '#E6F1FF',
   error: '#EF4444',
   warning: '#F59E0B',

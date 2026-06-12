@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import type { LoginRequest, LoginResponse } from '@/types/auth';
+import type { LoginRequest, LoginResponse, User } from '@/types/auth';
 import type { ApiResponse } from '@/types/common';
 import { mockUsers } from '@/mocks/data/users.data';
 
@@ -18,6 +18,23 @@ function makeTokens() {
 }
 
 export const authHandlers = [
+  http.get(`${BASE}/auth/profile`, ({ request }) => {
+    const auth = request.headers.get('Authorization');
+    if (!auth) {
+      return HttpResponse.json(
+        { success: false, data: null, error: 'Unauthorized', timestamp: timestamp() },
+        { status: 401 },
+      );
+    }
+    const { id, username, email, displayName, role } = mockUsers[0];
+    const response: ApiResponse<User> = {
+      success: true,
+      data: { id, username, email, displayName, role },
+      timestamp: timestamp(),
+    };
+    return HttpResponse.json(response);
+  }),
+
   http.post(`${BASE}/auth/login`, async ({ request }) => {
     const body = (await request.json()) as LoginRequest;
 
