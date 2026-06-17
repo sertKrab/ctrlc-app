@@ -1,9 +1,13 @@
 {
-  "__PROJECT_NAME__": "CtrlC Enterprise",
-  "__PROJECT_LOWER__": "ctrlc-enterprise",
-  "__APP_TITLE__": "CtrlC Enterprise",
-  "__PRIMARY_COLOR__": "#0D7FFF",
-  "__SECONDARY_COLOR__": "#2B3D5E",
-  "__FONT_FAMILY__": "Sarabun",
-  "__API_URL__": "https://api.example.com"
+  "__PROJECT_NAME__":         "CtrlC Enterprise",
+  "__PROJECT_LOWER__":        "ctrlc-enterprise",
+  "__APP_TITLE__":            "CtrlC Enterprise",
+  "__PRIMARY_COLOR__":        "#0D7FFF",
+  "__PRIMARY_COLOR_DARK__":   "#0B6DDB",
+  "__PRIMARY_COLOR_LIGHT__":  "#E4F1FF",
+  "__SECONDARY_COLOR__":      "#2B3D5E",
+  "__SECONDARY_COLOR_DARK__": "#1D2940",
+  "__SECONDARY_COLOR_LIGHT__":"#425270",
+  "__FONT_FAMILY__":          "Sarabun",
+  "__API_URL__":              "https://api.example.com"
 }

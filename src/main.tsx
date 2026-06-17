@@ -8,6 +8,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import App from '@/App';
 import '@/i18n';
 import '@/index.css';
+import '@/styles/design-system.css';
 
 async function enableMocking(): Promise<void> {
   if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCK === 'true') {
