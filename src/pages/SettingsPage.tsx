@@ -50,7 +50,9 @@ export default function SettingsPage() {
   const { t, i18n } = useTranslation('auth');
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('account');
-  const [profileName, setProfileName] = useState(user?.displayName ?? 'ผู้ดูแลระบบ');
+  const [profileName, setProfileName] = useState(
+    user ? `${user.firstName} ${user.lastName}` : 'ผู้ดูแลระบบ',
+  );
   const [phone, setPhone] = useState('0812345678');
   const [jobTitle, setJobTitle] = useState('System Administrator');
   const [lang, setLang] = useState(i18n.language);

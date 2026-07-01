@@ -1,23 +1,23 @@
+import { useState } from 'react';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
-import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/useAuth';
-import type { SvgIconProps } from '@mui/material/SvgIcon';
-import type { ComponentType, ReactNode } from 'react';
+import { NAV_CONFIG, NAV_SYSTEM, type NavItem } from '@/config/nav';
+import { NAV_ICON_MAP } from '@/config/nav.icons';
+import type { ReactNode } from 'react';
 import { THEME_COLORS } from '@/theme';
 
 const SIDEBAR_WIDTH = 240;
@@ -25,34 +25,20 @@ const SIDEBAR_COLLAPSED_WIDTH = 64;
 const NAVY = THEME_COLORS.secondary;
 const BLUE = THEME_COLORS.primary;
 
-interface NavItem {
-  path: string;
-  labelKey: string;
-  Icon: ComponentType<SvgIconProps>;
-}
-
 interface AppSidebarProps {
   mobileOpen: boolean;
   onMobileClose: () => void;
 }
-
-const NAV_ITEMS: NavItem[] = [
-  { path: ROUTES.DASHBOARD, labelKey: 'menu.dashboard', Icon: DashboardOutlinedIcon },
-  { path: ROUTES.CUSTOMERS, labelKey: 'menu.customers', Icon: PeopleOutlinedIcon },
-  { path: ROUTES.REPORT, labelKey: 'menu.report', Icon: AssessmentOutlinedIcon },
-];
-
-const NAV_SYSTEM: NavItem[] = [
-  { path: ROUTES.SETTINGS, labelKey: 'menu.settings', Icon: SettingsOutlinedIcon },
-];
 
 export default function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useTranslation('navigation');
   const { logout } = useAuth();
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
+  const hasActiveChild = (item: NavItem) => item.children?.some((c) => isActive(c.path)) ?? false;
 
   function renderTooltip(label: string, children: ReactNode) {
     return (
@@ -64,49 +50,86 @@ export default function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProp
     );
   }
 
-  function renderNavItem(item: NavItem) {
-    const active = isActive(item.path);
+  function renderNavButton(item: NavItem, opts?: { indent?: boolean; expandState?: boolean }) {
+    const Icon = NAV_ICON_MAP[item.icon];
+    const active = item.children ? hasActiveChild(item) : isActive(item.path);
     const label = t(item.labelKey);
+    const hasChildren = !!item.children?.length;
 
-    const renderButton = () => (
+    const handleClick = () => {
+      if (hasChildren) {
+        setOpenSubmenus((prev) => ({ ...prev, [item.path]: !prev[item.path] }));
+        return;
+      }
+      navigate(item.path);
+      onMobileClose();
+    };
+
+    return (
       <ListItemButton
-        onClick={() => {
-          navigate(item.path);
-          onMobileClose();
-        }}
+        onClick={handleClick}
         sx={{
           mx: 1,
           mb: 0.5,
-          px: { xs: 2, md: 1.25, lg: 2 },
+          pl: opts?.indent ? { xs: 4, md: 1.25, lg: 4 } : { xs: 2, md: 1.25, lg: 2 },
+          pr: { xs: 2, md: 1.25, lg: 2 },
           borderRadius: 1,
           color: active ? '#fff' : 'rgba(255,255,255,0.72)',
-          backgroundColor: active ? BLUE : 'transparent',
-          borderLeft: active ? `3px solid #fff` : '3px solid transparent',
+          backgroundColor: active && !hasChildren ? BLUE : 'transparent',
+          borderLeft: active && !hasChildren ? `3px solid #fff` : '3px solid transparent',
           justifyContent: { md: 'center', lg: 'flex-start' },
           '&:hover': {
-            backgroundColor: active ? BLUE : 'rgba(255,255,255,0.08)',
+            backgroundColor: active && !hasChildren ? BLUE : 'rgba(255,255,255,0.08)',
           },
         }}
       >
         <ListItemIcon sx={{ minWidth: { xs: 36, md: 0, lg: 36 }, color: 'inherit', justifyContent: 'center' }}>
-          <item.Icon fontSize="small" />
+          <Icon fontSize="small" />
         </ListItemIcon>
         <ListItemText
           primary={label}
           sx={{ display: { md: 'none', lg: 'block' } }}
           primaryTypographyProps={{ fontSize: '0.875rem', fontWeight: active ? 600 : 400 }}
         />
+        {hasChildren && (
+          <Box sx={{ display: { md: 'none', lg: 'block' } }}>
+            {opts?.expandState ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+          </Box>
+        )}
       </ListItemButton>
     );
+  }
+
+  function renderNavItem(item: NavItem) {
+    const label = t(item.labelKey);
+    const hasChildren = !!item.children?.length;
+    const isOpen = hasChildren && (openSubmenus[item.path] ?? hasActiveChild(item));
 
     return (
       <Box key={item.path} sx={{ display: 'block' }}>
         <Box sx={{ display: { xs: 'none', md: 'block', lg: 'none' } }}>
-          {renderTooltip(label, renderButton())}
+          {renderTooltip(label, renderNavButton(item, { expandState: isOpen }))}
         </Box>
         <Box sx={{ display: { xs: 'block', md: 'none', lg: 'block' } }}>
-          {renderButton()}
+          {renderNavButton(item, { expandState: isOpen })}
         </Box>
+
+        {hasChildren && (
+          <Collapse in={isOpen} timeout="auto" unmountOnExit>
+            <List disablePadding>
+              {item.children!.map((child) => (
+                <Box key={child.path} sx={{ display: 'block' }}>
+                  <Box sx={{ display: { xs: 'none', md: 'block', lg: 'none' } }}>
+                    {renderTooltip(t(child.labelKey), renderNavButton(child, { indent: true }))}
+                  </Box>
+                  <Box sx={{ display: { xs: 'block', md: 'none', lg: 'block' } }}>
+                    {renderNavButton(child, { indent: true })}
+                  </Box>
+                </Box>
+              ))}
+            </List>
+          </Collapse>
+        )}
       </Box>
     );
   }
@@ -146,27 +169,31 @@ export default function AppSidebar({ mobileOpen, onMobileClose }: AppSidebarProp
 
       <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)', mx: 2 }} />
 
-      <Box sx={{ flex: 1, pt: 1 }}>
-        <Typography
-          sx={{ px: 2.5, py: 1, fontSize: '0.6875rem', fontWeight: 600,
-            color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase',
-            display: { md: 'none', lg: 'block' } }}
-        >
-          Main
-        </Typography>
-        <List disablePadding>
-          {NAV_ITEMS.map(renderNavItem)}
-        </List>
+      <Box sx={{ flex: 1, pt: 1, overflowY: 'auto' }}>
+        {NAV_CONFIG.map((group) => (
+          <Box key={group.titleKey}>
+            <Typography
+              sx={{ px: 2.5, py: 1, fontSize: '0.6875rem', fontWeight: 600,
+                color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase',
+                display: { md: 'none', lg: 'block' } }}
+            >
+              {t(group.titleKey)}
+            </Typography>
+            <List disablePadding>
+              {group.items.map(renderNavItem)}
+            </List>
+          </Box>
+        ))}
 
         <Typography
           sx={{ px: 2.5, pt: 2, pb: 1, fontSize: '0.6875rem', fontWeight: 600,
             color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase',
             display: { md: 'none', lg: 'block' } }}
         >
-          System
+          {t(NAV_SYSTEM.titleKey)}
         </Typography>
         <List disablePadding>
-          {NAV_SYSTEM.map(renderNavItem)}
+          {NAV_SYSTEM.items.map(renderNavItem)}
         </List>
       </Box>
 

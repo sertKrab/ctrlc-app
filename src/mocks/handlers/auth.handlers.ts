@@ -26,10 +26,10 @@ export const authHandlers = [
         { status: 401 },
       );
     }
-    const { id, username, email, displayName, role } = mockUsers[0];
+    const { id, email, firstName, lastName, role } = mockUsers[0];
     const response: ApiResponse<User> = {
       success: true,
-      data: { id, username, email, displayName, role },
+      data: { id, email, firstName, lastName, role },
       timestamp: timestamp(),
     };
     return HttpResponse.json(response);
@@ -38,24 +38,24 @@ export const authHandlers = [
   http.post(`${BASE}/auth/login`, async ({ request }) => {
     const body = (await request.json()) as LoginRequest;
 
-    if (body.username === 'error@test.com') {
+    if (body.email === 'error@test.com') {
       const errorResponse: ApiResponse<null> = {
         success: false,
         data: null as unknown as never,
-        error: 'Invalid username or password',
+        error: 'Invalid email or password',
         timestamp: timestamp(),
       };
       return HttpResponse.json(errorResponse, { status: 401 });
     }
 
-    const user = mockUsers.find((u) => u.username === body.username) ?? mockUsers[0];
+    const user = mockUsers.find((u) => u.email === body.email) ?? mockUsers[0];
 
     const loginResponse: LoginResponse = {
       user: {
         id: user.id,
-        username: user.username,
         email: user.email,
-        displayName: user.displayName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         role: user.role,
       },
       tokens: makeTokens(),
@@ -96,9 +96,9 @@ export const authHandlers = [
     const loginResponse: LoginResponse = {
       user: {
         id: user.id,
-        username: user.username,
         email: user.email,
-        displayName: user.displayName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         role: user.role,
       },
       tokens: makeTokens(),

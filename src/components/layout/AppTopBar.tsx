@@ -16,9 +16,7 @@ import { THEME_COLORS } from '@/theme';
 
 const BREADCRUMB_MAP: Record<string, string[]> = {
   [ROUTES.DASHBOARD]: ['menu.dashboard'],
-  [ROUTES.CUSTOMERS]: ['menu.customers'],
   [ROUTES.SETTINGS]: ['menu.settings'],
-  [ROUTES.REPORT]: ['menu.report'],
 };
 
 interface AppTopBarProps {
@@ -107,11 +105,11 @@ export default function AppTopBar({ onMenuClick }: AppTopBarProps) {
                   fontWeight: 600,
                 }}
               >
-                {getInitials(user.displayName)}
+                {getInitials(`${user.firstName} ${user.lastName}`)}
               </Avatar>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <Typography sx={{ fontSize: '0.8125rem', fontWeight: 500, color: '#1A1A2E', lineHeight: 1.3 }}>
-                  {user.displayName}
+                  {user.firstName} {user.lastName}
                 </Typography>
                 <Typography sx={{ fontSize: '0.6875rem', color: '#6B7280', lineHeight: 1.3 }}>
                   {user.role}

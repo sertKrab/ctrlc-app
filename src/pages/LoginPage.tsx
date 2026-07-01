@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from '@/hooks/useForm';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
+import { isNetworkError, isRateLimitError } from '@/utils/errors';
 import AppTextField from '@/components/form/AppTextField';
 import AppCheckbox from '@/components/form/AppCheckbox';
 import AppButton from '@/components/ui/AppButton';
@@ -51,10 +52,20 @@ export default function LoginPage() {
     setIsSubmitting(true);
     setLoginError(null);
     try {
-      await login({ username: values.email, password: values.password });
+      await login({ email: values.email, password: values.password });
       void navigate(ROUTES.DASHBOARD);
-    } catch {
-      setLoginError(t('login.error.invalid'));
+    } catch (err: unknown) {
+      // Distinguish "we couldn't reach the server" (CORS, network down,
+      // timeout) from "the server said your credentials are wrong" — a bare
+      // catch that always shows "invalid credentials" actively misleads
+      // users (and developers) chasing an unrelated connection problem.
+      if (isNetworkError(err)) {
+        setLoginError(t('login.error.network'));
+      } else if (isRateLimitError(err)) {
+        setLoginError(t('login.error.ratelimit'));
+      } else {
+        setLoginError(t('login.error.invalid'));
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -1,6 +1,8 @@
 {
   "menu": {
     "title": "__APP_TITLE__",
+    "groupMain": "หลัก",
+    "groupSystem": "ระบบ",
     "dashboard": "แดชบอร์ด",
     "customers": "ลูกค้า",
     "report": "รายงาน",

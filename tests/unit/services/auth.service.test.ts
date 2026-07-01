@@ -29,7 +29,7 @@ describe('AuthService.login', () => {
   it('returns LoginResponse on valid credentials', async () => {
     mockPost.mockResolvedValueOnce(createApiSuccess(mockLoginResponse));
 
-    const result = await authService.login({ username: 'admin@ctrlc.co.th', password: 'secret' });
+    const result = await authService.login({ email: 'admin@ctrlc.co.th', password: 'secret' });
 
     expect(result.success).toBe(true);
     expect(result.data.user.email).toBe('admin@ctrlc.co.th');
@@ -39,7 +39,7 @@ describe('AuthService.login', () => {
   it('returns ApiResponse with success=false for invalid credentials', async () => {
     mockPost.mockResolvedValueOnce(createApiFailure('AUTH-001'));
 
-    const result = await authService.login({ username: 'error@test.com', password: 'wrong' });
+    const result = await authService.login({ email: 'error@test.com', password: 'wrong' });
 
     expect(result.success).toBe(false);
     expect(result.error).toBe('AUTH-001');
@@ -49,18 +49,18 @@ describe('AuthService.login', () => {
     mockPost.mockRejectedValueOnce(new Error('Network Error'));
 
     await expect(
-      authService.login({ username: 'admin@ctrlc.co.th', password: 'secret' }),
+      authService.login({ email: 'admin@ctrlc.co.th', password: 'secret' }),
     ).rejects.toThrow('Network Error');
   });
 
   it('calls the login endpoint with provided credentials', async () => {
     mockPost.mockResolvedValueOnce(createApiSuccess(mockLoginResponse));
 
-    await authService.login({ username: 'admin@ctrlc.co.th', password: 'mypass' });
+    await authService.login({ email: 'admin@ctrlc.co.th', password: 'mypass' });
 
     expect(mockPost).toHaveBeenCalledWith(
       expect.stringContaining('/auth'),
-      { username: 'admin@ctrlc.co.th', password: 'mypass' },
+      { email: 'admin@ctrlc.co.th', password: 'mypass' },
     );
   });
 });

@@ -2,9 +2,9 @@ import type { LoginResponse, TokenPair, User } from '@/types/auth';
 
 export const mockUser: User = {
   id: '1',
-  username: 'admin',
   email: 'admin@ctrlc.co.th',
-  displayName: 'Admin User',
+  firstName: 'Admin',
+  lastName: 'User',
   role: 'admin',
 };
 

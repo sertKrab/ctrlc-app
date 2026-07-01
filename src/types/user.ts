@@ -4,9 +4,9 @@ export type UserStatus = 'active' | 'inactive' | 'suspended';
 
 export interface UserProfile {
   id: string;
-  username: string;
   email: string;
-  displayName: string;
+  firstName: string;
+  lastName: string;
   role: UserRole;
   status: UserStatus;
   avatarUrl?: string;

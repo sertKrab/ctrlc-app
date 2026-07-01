@@ -3,14 +3,14 @@ import { createTheme, type Shadows } from '@mui/material/styles';
 // ⚠️  __PRIMARY_COLOR__ และ __SECONDARY_COLOR__ คือ placeholders
 // scaffold_setup STEP 4 จะ replace ด้วยค่าจริงจาก project-plan.json
 // อย่าแก้ไขค่าเหล่านี้โดยตรง — แก้ที่ project-plan.json แทน
-const PRIMARY_COLOR   = '__PRIMARY_COLOR__';
-const SECONDARY_COLOR = '__SECONDARY_COLOR__';
-const FONT_FAMILY     = "'__FONT_FAMILY__', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+const PRIMARY_COLOR   = '#2563EB';
+const SECONDARY_COLOR = '#1A1A2E';
+const FONT_FAMILY     = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
 // derived variants (populated at runtime via CSS vars — ดู src/index.css)
-const PRIMARY_DARK    = '__PRIMARY_COLOR_DARK__';
-const PRIMARY_LIGHT   = '__PRIMARY_COLOR_LIGHT__';
-const SECONDARY_DARK  = '__SECONDARY_COLOR_DARK__';
+const PRIMARY_DARK    = '#1D4ED8';
+const PRIMARY_LIGHT   = '#60A5FA';
+const SECONDARY_DARK  = '#0F0F1E';
 
 const theme = createTheme({
   palette: {
@@ -147,11 +147,11 @@ export default theme;
 // THEME_COLORS — backward compat กับ components ที่ใช้ import นี้
 // ⚠️  ค่าเหล่านี้เป็น placeholder เช่นกัน จะถูก replace โดย scaffold_setup
 export const THEME_COLORS = {
-  primary:       '__PRIMARY_COLOR__',
-  secondary:     '__SECONDARY_COLOR__',
-  primaryLight:  '__PRIMARY_COLOR_LIGHT__',
-  primaryDark:   '__PRIMARY_COLOR_DARK__',
-  secondaryDark: '__SECONDARY_COLOR_DARK__',
+  primary:       '#2563EB',
+  secondary:     '#1A1A2E',
+  primaryLight:  '#60A5FA',
+  primaryDark:   '#1D4ED8',
+  secondaryDark: '#0F0F1E',
   error:         '#EF4444',
   warning:       '#F59E0B',
   success:       '#10B981',
